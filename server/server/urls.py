@@ -20,7 +20,7 @@ from dq import views
 
 router = routers.DefaultRouter()
 router.register(r'queues', views.QueueView, 'queue')
-router.register(r'jobs', views.DownloadJobView, 'job')
+router.register(r'download_jobs', views.DownloadJobView, 'download_job')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
