@@ -27,12 +27,18 @@ def loop() -> None:
     """ 
     TODO: use async methods here and go parallel 
     """
+    logging.debug("Getting all incomplete jobs")
     all_jobs = models.DownloadJob.objects.filter(completed__exact=False)
+    logging.debug(f"There are {len(all_jobs)} incomplete jobs")
     if not all_jobs:
         logging.debug("There is no incomplete job - sleeping for 5s")
         time.sleep(5)
-    for q in models.Queue.objects.all()[:1]:
-        for dj in q.downloadjob_set.filter(completed__exact=False):
+    for q in models.Queue.objects.all():
+        candidate_jobs = q.downloadjob_set.filter(completed__exact=False)
+        logging.debug(
+            f"Queue: {q.name}: Number of incomplete jobs: {len(candidate_jobs)}"
+        )
+        for dj in candidate_jobs:
             logging.debug(
                 f"Queue: {q.name}: Going to download {dj.target_file} from {dj.url} to {dj.target_directory}"
             )

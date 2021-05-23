@@ -2,46 +2,41 @@ import React, { Component } from "react";
 import Modal from "./components/Modal";
 import axios from "axios";
 
-// const DownloadJobs = [
-//   {
-//     id: 1,
-//     url: "url1",
-//     target_directory: "Serialy",
-//     completed: false,
-//   },
-//   {
-//     id: 2,
-//     url: "url2",
-//     target_directory: "Filmy",
-//     completed: true,
-//   },
-// ];
-
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
       viewCompleted: false,
       downloadJobList: [],
+      queueList: [],
       modal: false,
       activeItem: {
-        url: "",
         target_directory: "",
+        target_file: "",
+        url: "",
+        queue: null,
         completed: false,
         priority: 0,
+        progress: 0,
       },
     };
   }
 
   componentDidMount() {
     this.refreshList();
+    setInterval(this.refreshList, 2000);
   }
 
   refreshList = () => {
+    console.debug("Refreshing list")
     axios
       .get("http://localhost:8000/api/download_jobs/")
       .then((res) => this.setState({ downloadJobList: res.data }))
       .catch((err) => console.log(err));
+    axios
+      .get("http://localhost:8000/api/queues/")
+      .then((res) => this.setState({ queueList: res.data }))
+      .catch((err) => console.log(err));    
   };
 
   toggle = () => {
@@ -69,7 +64,7 @@ class App extends Component {
   };
 
   createItem = () => {
-    const item = { url: "", target_directory: "", completed: false, priority: 0 };
+    const item = { target_directory: "", target_file: "", url: "", queue: 1, completed: false, priority: 0, progress: 0};
 
     this.setState({ activeItem: item, modal: !this.state.modal });
   };
@@ -112,28 +107,33 @@ class App extends Component {
     );
 
     return newItems.map((item) => (
-      <li
+      <tr
         key={item.id}
-        className="list-group-item d-flex justify-content-between align-items-center"
       >
-        <span
+        <td
           className={`todo-title mr-2 ${
             this.state.viewCompleted ? "completed-todo" : ""
           }`}
           title={item.url}
         >
           {item.url}
-        </span>
-        
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16">
-          <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
-        </svg>
-        <span
+        </td>
+        <td>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-right" viewBox="0 0 16 16">
+            <path fillRule="evenodd" d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8z"/>
+          </svg>
+        </td>
+        <td
           title={item.target_directory}
         >
-          {item.target_directory}
-        </span>
-        <span>
+          {item.target_directory}{item.target_file}
+        </td>
+        <td>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" style={{width: item.progress + '%'}}  aria-valuemin="0" aria-valuemax="100">{item.progress}%</div>
+          </div>
+        </td>
+        <td>
           <button
             className="btn btn-secondary mr-2"
             onClick={() => this.editItem(item)}
@@ -146,8 +146,8 @@ class App extends Component {
           >
             Delete
           </button>
-        </span>
-      </li>
+        </td>
+      </tr>
     ));
   };
 
@@ -156,8 +156,7 @@ class App extends Component {
       <main className="container">
         <h1 className="text-white text-uppercase text-center my-4">Download queue</h1>
         <div className="row">
-          <div className="col-md-6 col-sm-10 mx-auto p-0">
-            <div className="card p-3">
+          <div className="col-md-12 col-sm-10 mx-auto p-0">
               <div className="mb-4">
                 <button
                   className="btn btn-primary"
@@ -167,15 +166,27 @@ class App extends Component {
                 </button>
               </div>
               {this.renderTabList()}
-              <ul className="list-group list-group-flush border-top-0">
-                {this.renderItems()}
-              </ul>
-            </div>
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">URL</th>
+                    <th scope="col"></th>
+                    <th scope="col">Target</th>
+                    <th scope="col">Progress</th>
+                    <th scope="col">Operations</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.renderItems()}
+                </tbody>
+              </table>
+            
           </div>
         </div>
         {this.state.modal ? (
           <Modal
             activeItem={this.state.activeItem}
+            queueList={this.state.queueList}
             toggle={this.toggle}
             onSave={this.handleSubmit}
           />

@@ -9,4 +9,4 @@ class QueueSerializer(serializers.ModelSerializer):
 class DownloadJobSerializer(serializers.ModelSerializer):
     class Meta:
         model = DownloadJob
-        fields = ('id', 'target_directory', 'url', 'queue', 'completed', 'priority')
+        fields = ('id', 'target_directory', 'target_file', 'url', 'queue', 'completed', 'priority', 'progress')

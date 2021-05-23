@@ -16,6 +16,7 @@ export default class CustomModal extends Component {
     super(props);
     this.state = {
       activeItem: this.props.activeItem,
+      queueList: this.props.queueList
     };
   }
 
@@ -31,6 +32,7 @@ export default class CustomModal extends Component {
     this.setState({ activeItem });
   };
 
+
   render() {
     const { toggle, onSave } = this.props;
 
@@ -39,6 +41,20 @@ export default class CustomModal extends Component {
         <ModalHeader toggle={toggle}>Todo Item</ModalHeader>
         <ModalBody>
           <Form>
+            <FormGroup>
+              <Label for="download_job-queue">Queue</Label>
+              <Input
+                type="select"
+                id="download_job-target_file"
+                name="queue"
+                value={this.state.activeItem.queue}
+                onChange={this.handleChange}
+                placeholder="Queue">
+              {this.state.queueList.map((e, key) => {
+                return <option value={e.id}>{e.name}</option>;
+              })}
+              </Input>
+            </FormGroup>
             <FormGroup>
               <Label for="download_job-url">URL</Label>
               <Input
@@ -58,19 +74,19 @@ export default class CustomModal extends Component {
                 name="target_directory"
                 value={this.state.activeItem.target_directory}
                 onChange={this.handleChange}
-                placeholder="Download destionation (under /data/fun)"
+                placeholder="Download destination"
               />
             </FormGroup>
-            <FormGroup check>
-              <Label check>
-                <Input
-                  type="checkbox"
-                  name="completed"
-                  checked={this.state.activeItem.completed}
-                  onChange={this.handleChange}
-                />
-                Completed
-              </Label>
+            <FormGroup>
+              <Label for="download_job-target_file">Target file name</Label>
+              <Input
+                type="text"
+                id="download_job-target_file"
+                name="target_file"
+                value={this.state.activeItem.target_file}
+                onChange={this.handleChange}
+                placeholder="File name"
+              />
             </FormGroup>
           </Form>
         </ModalBody>
