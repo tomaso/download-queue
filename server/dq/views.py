@@ -5,9 +5,11 @@ from .models import Queue, DownloadJob
 
 # Create your views here.
 
+
 class QueueView(viewsets.ModelViewSet):
     serializer_class = QueueSerializer
     queryset = Queue.objects.all()
+
 
 class DownloadJobView(viewsets.ModelViewSet):
     serializer_class = DownloadJobSerializer

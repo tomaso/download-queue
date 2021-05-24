@@ -17,15 +17,15 @@ def setup_logging() -> None:
 
 
 def setup() -> None:
-    """ 
-    Initial setup of the daemon 
+    """
+    Initial setup of the daemon
     """
     setup_logging()
 
 
 def loop() -> None:
-    """ 
-    TODO: use async methods here and go parallel 
+    """
+    TODO: use async methods here and go parallel
     """
     logging.debug("Getting all incomplete jobs")
     all_jobs = models.DownloadJob.objects.filter(completed__exact=False)
