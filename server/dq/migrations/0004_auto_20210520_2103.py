@@ -6,18 +6,18 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('dq', '0003_alter_downloadjob_queue'),
+        ("dq", "0003_alter_downloadjob_queue"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='downloadjob',
-            name='progress',
+            model_name="downloadjob",
+            name="progress",
             field=models.DecimalField(decimal_places=0, default=0, max_digits=3),
         ),
         migrations.AddField(
-            model_name='downloadjob',
-            name='target_file',
-            field=models.CharField(default='file', max_length=256),
+            model_name="downloadjob",
+            name="target_file",
+            field=models.CharField(default="file", max_length=256),
         ),
     ]
