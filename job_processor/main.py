@@ -103,8 +103,7 @@ async def process_candidate_jobs(candidate_jobs: List[models.DownloadJob]) -> No
 
 
 def loop() -> None:
-    """
-    """
+    """ """
     logging.debug("Getting all incomplete jobs")
     all_jobs = models.DownloadJob.objects.filter(completed__exact=False)
     logging.debug(f"There are {len(all_jobs)} incomplete jobs")
@@ -161,8 +160,7 @@ async def queue_loop() -> None:
 
 
 def main() -> None:
-    """
-    """
+    """ """
     try:
         setup()
     except Exception as exc:
