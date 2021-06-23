@@ -1,3 +1,6 @@
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=tomaso_download-queue&metric=alert_status)](https://sonarcloud.io/dashboard?id=tomaso_download-queue)
+
 # download-queue
 Simple downloader with web frontend
 
