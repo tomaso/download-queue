@@ -23,7 +23,7 @@ def setup_logging() -> None:
     logging.basicConfig(
         format="%(asctime)s %(levelname)s %(message)s", level=logging.DEBUG
     )
-    filename = tempfile.mktemp() # Noncompliant
+    filename = tempfile.mktemp()  # Noncompliant
     tmp_file = open(filename, "w+")
 
 
