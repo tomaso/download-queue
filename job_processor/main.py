@@ -16,15 +16,12 @@ django.setup()
 from asgiref.sync import sync_to_async
 from dq import models
 from typing import Awaitable, List
-import tempfile
 
 
 def setup_logging() -> None:
     logging.basicConfig(
         format="%(asctime)s %(levelname)s %(message)s", level=logging.DEBUG
     )
-    filename = tempfile.mktemp() # Noncompliant
-    tmp_file = open(filename, "w+")
 
 
 def setup() -> None:
@@ -73,34 +70,6 @@ async def process_one_job(download_job: models.DownloadJob) -> None:
                 await sync_to_async(download_job.save, thread_sensitive=True)()
 
 
-def process_one_job_sync(download_job: models.DownloadJob) -> None:
-    logging.info(
-        f"Queue: {download_job.queue.name}: Going to download {download_job.target_file} from {download_job.url} to {download_job.target_directory}"
-    )
-    url = download_job.url
-    file_name = os.path.join(download_job.target_directory, download_job.target_file)
-    with open(file_name, "wb") as f:
-        logging.info(f"{file_name} opened for writing")
-        response = requests.get(url, stream=True)
-        total_length = response.headers.get("content-length")
-        if total_length is None:
-            f.write(response.content)
-        else:
-            dl = 0
-            total_length = int(total_length)
-            for data in response.iter_content(chunk_size=1024):
-                dl += len(data)
-                f.write(data)
-                progress = int(100 * dl / total_length)
-                download_job.progress = progress
-                download_job.save()
-                logging.debug(
-                    f"{download_job.target_file}: progress: {download_job.progress}%"
-                )
-            download_job.completed = True
-            download_job.save()
-
-
 async def process_candidate_jobs(candidate_jobs: List[models.DownloadJob]) -> None:
     await asyncio.gather(*[process_one_job(dj) for dj in candidate_jobs])
 
@@ -123,8 +92,14 @@ def loop() -> None:
     asyncio.run(process_candidate_jobs(candidate_jobs))
 
 
-async def download_task_from_queue(queue: models.Queue) -> Task:
+@sync_to_async
+def get_first_incomplete_job(queue: models.Queue) -> models.DownloadJob:
     job = queue.downloadjob_set.filter(completed__exact=False).first()
+    return job
+
+
+async def download_task_from_queue(queue: models.Queue) -> Task:
+    job = await get_first_incomplete_job(queue)
     if job:
         t = process_one_job(job)
     else:
@@ -135,7 +110,7 @@ async def download_task_from_queue(queue: models.Queue) -> Task:
 
 
 @sync_to_async
-def get_queues():
+def get_queues() -> List[models.Queue]:
     return list(models.Queue.objects.all())
 
 

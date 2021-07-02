@@ -1,0 +1,21 @@
+name: pytest
+on: [pull_request]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+      - name: Setup environment with pipenv
+        env:
+          DJANGO_SETTINGS_MODULE: server.settings
+          PYTHONPATH: ../server
+        run: |
+          cd job_processor
+          pipenv install
+          pipenv shell
+          pytest
+
