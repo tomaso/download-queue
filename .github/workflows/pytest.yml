@@ -9,13 +9,15 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.7
-      - name: Setup environment with pipenv
+      - name: Install pipenv
+        run: |
+          python -m pip install --upgrade pipenv wheel
+      - name: Run tests via pipenv
         env:
           DJANGO_SETTINGS_MODULE: server.settings
           PYTHONPATH: ../server
         run: |
           cd job_processor
           pipenv install
-          pipenv shell
-          pytest
+          pipenv run test
 
