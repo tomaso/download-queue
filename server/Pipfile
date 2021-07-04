@@ -14,9 +14,11 @@ aiohttp = "*"
 aiofiles = "*"
 asgiref = "*"
 pytest = "*"
+coverage = "*"
 
 [requires]
 python_version = "3.7"
 
 [scripts]
 test = "pytest"
+coverage = "python -mcoverage xml test_main.py"
