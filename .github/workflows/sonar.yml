@@ -20,6 +20,13 @@ jobs:
           cd job_processor
           pipenv install
           pipenv run test
+      - name: Run coverage tool via pipenv
+        env:
+          DJANGO_SETTINGS_MODULE: server.settings
+          PYTHONPATH: ../server
+        run: |
+          cd job_processor
+          pipenv install
           pipenv run coverage
       - name: Archive code coverage results
         uses: actions/upload-artifact@v2
