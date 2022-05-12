@@ -36,5 +36,3 @@ In [2]: django.setup()
 In [3]: from dq import models
 In [4]: models.Queue.objects.all()
 ```
-
-
