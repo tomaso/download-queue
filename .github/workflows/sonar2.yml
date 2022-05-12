@@ -14,6 +14,7 @@ jobs:
         run: | 
           git remote -v
           git branch
+          cat testfile
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
