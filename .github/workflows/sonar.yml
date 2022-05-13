@@ -15,6 +15,7 @@ jobs:
           git remote -v
           git branch
           cat testfile
+          echo "I am main"
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
