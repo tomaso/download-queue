@@ -5,7 +5,8 @@ on:
     types: [completed]
 jobs:
   sonarcloud_part2:
-    - uses: actions/checkout@v2
+    - name: Checkout the new PR
+      uses: actions/checkout@v2
       with:
         repository: ${{ github.event.workflow_run.head_repository.full_name }}
         ref: ${{ github.event.workflow_run.head_branch }}
