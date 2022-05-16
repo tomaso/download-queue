@@ -22,7 +22,7 @@ jobs:
           git branch
           cat testfile
       - name: Get PR artefacts
-        use: actions/download-artifact@v3
+        uses: actions/download-artifact@v3
         with: 
           name: pr_info
       - name: Display structure of downloaded files
