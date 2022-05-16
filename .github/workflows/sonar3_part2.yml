@@ -4,7 +4,7 @@ on:
     workflows: [sonar3]
     types: [completed]
 jobs:
-  sonarcloud:
+  sonarcloud_part2:
     - uses: actions/checkout@v2
       with:
         repository: ${{ github.event.workflow_run.head_repository.full_name }}
