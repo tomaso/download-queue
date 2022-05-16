@@ -21,8 +21,12 @@ jobs:
           git remote -v
           git branch
           cat testfile
-          PR_NUM=$(pr_num.txt)
-          echo PR_NUM: $PR_NUM
+      - name: Get PR artefacts
+        use: actions/download-artifact@v3
+        with: 
+          name: pr_info
+      - name: Display structure of downloaded files
+        run: ls -R
       - name: Show some debugging
         uses: crazy-max/ghaction-dump-context@v1
       - name: SonarCloud Scan
