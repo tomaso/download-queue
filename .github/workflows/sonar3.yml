@@ -2,11 +2,11 @@ name: sonar3
 on:
   pull_request:
     types: [opened, synchronize, reopened]
-#jobs:
-#  sonarcloud:
-#    name: SonarCloud
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v2
-#        with:
-#          fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+jobs:
+  build_for_sonar:
+    name: SonarCloud build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Empty build step
+        run: echo "Project built"
+
