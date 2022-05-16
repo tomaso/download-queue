@@ -16,21 +16,13 @@ jobs:
           ref: ${{ github.event.workflow_run.head_branch }}
           fetch-depth: 0
       - name: Show context
+        shell: bash
         run: |
           git remote -v
           git branch
           cat testfile
-          echo "Running sonar scan with the following options:"
-          echo  -Dsonar.scm.revision=${{ github.event.workflow_run.head_sha }}
-          echo  -Dsonar.pullrequest.key=${{ github.event.workflow_run.pull_requests[0].number }}
-          echo  -Dsonar.pullrequest.branch=${{ github.event.workflow_run.pull_requests[0].head.ref }}
-          echo  -Dsonar.pullrequest.base=${{ github.event.workflow_run.pull_requests[0].base.ref }}
-          echo "More debugging:"
-          echo ${{ github.event.workflow_run }}
-          echo ${{ github.event.workflow_run.pull_requests }}
-          echo ${{ github.event.workflow_run.pull_requests.length }}
-          echo ${{ github.event.workflow_run.pull_requests[0] }}
-          echo ${{ github.event.workflow_run.pull_requests[0].number }}
+          PR_NUM=$(pr_num.txt)
+          echo PR_NUM: $PR_NUM
       - name: Show some debugging
         uses: crazy-max/ghaction-dump-context@v1
       - name: SonarCloud Scan

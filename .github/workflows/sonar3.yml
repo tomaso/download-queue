@@ -7,6 +7,24 @@ jobs:
     name: SonarCloud build
     runs-on: ubuntu-latest
     steps:
+      - name: Store PR info for workflow_run
+        shell: bash
+        env:
+          PR_NUM: ${{ github.event.number }}
+          PR_HEAD_REF: ${{ github.event.head.ref }}
+          PR_BASE_REF: ${{ github.event.base.ref }}
+        run: |
+          echo $PR_NUM
+          echo $PR_NUM > pr_num.txt
+          echo $PR_HEAD_REF
+          echo $PR_HEAD_REF > pr_head_ref.txt
+          echo $PR_BASE_REF
+          echo $PR_BASE_REF > pr_base_ref.txt
+      - name: Upload the PR info
+        uses: actions/upload-artifact@v3
+        with:
+          name: pr_info
+          path: ./pr_*.txt
+
       - name: Empty build step
         run: echo "Project built"
-
