@@ -31,9 +31,11 @@ jobs:
         run: |
           PR=$(cat pr_info/pr_num.txt)
           echo "SONAR_PR_NUMBER=$PR" >> $GITHUB_ENV
-      - name: Show some debugging
+      - name: Echo the PR number taken from artifact
         run: |
           echo SONAR_PR_NUMBER: $SONAR_PR_NUMBER
+      - name: Show some debugging
+        uses: crazy-max/ghaction-dump-context@v1
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
@@ -42,7 +44,7 @@ jobs:
         with:
           args: >
             -Dsonar.scm.revision=${{ github.event.workflow_run.head_sha }}
-            -Dsonar.pullrequest.key=$SONAR_PR_NUMBER
+            -Dsonar.pullrequest.key=${{ env.SONAR_PR_NUMBER }}
 #            -Dsonar.pullrequest.key=${{ github.event.workflow_run.pull_requests[0].number }}
 #            -Dsonar.pullrequest.branch=${{ github.event.workflow_run.pull_requests[0].head.ref }}
 #            -Dsonar.pullrequest.base=${{ github.event.workflow_run.pull_requests[0].base.ref }}
