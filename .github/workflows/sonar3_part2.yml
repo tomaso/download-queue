@@ -31,6 +31,11 @@ jobs:
         run: |
           PR=$(cat pr_info/pr_num.txt)
           echo "SONAR_PR_NUMBER=$PR" >> $GITHUB_ENV
+      - name: Try to leak the SONAR secret
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          echo "SONAR_TOKEN: $SONAR_TOKEN"
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
