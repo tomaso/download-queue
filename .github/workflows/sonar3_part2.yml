@@ -27,8 +27,10 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           workflow: sonar3.yml
           run_id: ${{ github.event.workflow_run.id }}
-      - name: Display structure of downloaded files
-        run: ls -R
+      - name: Read the PR number
+        run: |
+          cat pr_info/pr_num.txt >> $SONAR_PR_NUMBER
+          echo $SONAR_PR_NUMBER
       - name: Show some debugging
         uses: crazy-max/ghaction-dump-context@v1
       - name: SonarCloud Scan
@@ -39,6 +41,7 @@ jobs:
         with:
           args: >
             -Dsonar.scm.revision=${{ github.event.workflow_run.head_sha }}
+            -Dsonar.pullrequest.key=${{ github.event.workflow_run.pull_requests[0].number }}
 #            -Dsonar.pullrequest.key=${{ github.event.workflow_run.pull_requests[0].number }}
 #            -Dsonar.pullrequest.branch=${{ github.event.workflow_run.pull_requests[0].head.ref }}
 #            -Dsonar.pullrequest.base=${{ github.event.workflow_run.pull_requests[0].base.ref }}
