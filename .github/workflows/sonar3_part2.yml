@@ -29,10 +29,12 @@ jobs:
           run_id: ${{ github.event.workflow_run.id }}
       - name: Read the PR number
         run: |
-          cat pr_info/pr_num.txt >> $SONAR_PR_NUMBER
-          echo $SONAR_PR_NUMBER
+          PR=$(cat pr_info/pr_num.txt)
+          echo "SONAR_PR_NUMBER=$PR" >> $GITHUB_ENV
+          echo SONAR_PR_NUMBER: $SONAR_PR_NUMBER
       - name: Show some debugging
-        uses: crazy-max/ghaction-dump-context@v1
+        run: |
+          echo SONAR_PR_NUMBER: $SONAR_PR_NUMBER
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:
