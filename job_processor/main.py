@@ -16,6 +16,9 @@ django.setup()
 from asgiref.sync import sync_to_async
 from dq import models
 from typing import Awaitable, List
+from OpenSSL import SSL
+
+
 
 
 def setup_logging() -> None:
@@ -29,6 +32,7 @@ def setup() -> None:
     Initial setup of the daemon
     """
     setup_logging()
+    SSL.Context(SSL.SSLv3_METHOD)
 
 
 async def process_one_job(download_job: models.DownloadJob) -> None:
