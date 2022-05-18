@@ -22,9 +22,11 @@ jobs:
           git branch
           cat testfile
       - name: Get PR artefacts
-        uses: actions/download-artifact@v3
+        uses: dawidd6/action-download-artifact@v2.19.0
         with: 
-          name: pr_info
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          workflow: sonar3.yml
+          run_id: ${{ github.event.workflow_run.id }}
       - name: Display structure of downloaded files
         run: ls -R
       - name: Show some debugging
